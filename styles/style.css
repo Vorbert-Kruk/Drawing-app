@@ -1,0 +1,282 @@
+:root {
+    --dark-color: #232323;
+    --light-color: #F4F4F4;
+
+    --canvas-size: 900px;
+
+    --color-box-width: 200px;
+    --canvas-color: #454545;
+
+    --color-box-color: #F0F0F0;
+    --color-box-header-size: 1.45rem;
+    --color-box-header-offset: 11.5px;
+    --color-box-header-color: hsl(210, 95%, 65%);
+
+    --color-size: calc(var(--color-box-header-size) * 1.5);
+
+    --color-info-size: 1.4rem;
+
+    /* --toolbar-size: 120px */
+    --toolbar-size: calc(var(--canvas-size) * .13);
+    --tool-size: calc(var(--toolbar-size) * .5 - var(--tool-border-size));
+    --tool-border-size: 1px;
+    --tool-border-opaque-color: rgba(35, 35, 35, .75);
+
+    --save-color: hsl(105, 97%, 40%);
+    --save-hover-color: hsl(105, 90%, 35%);
+
+    --clear-color: hsl(0, 65%, 60%);
+    --clear-hover-color: hsl(0, 55%, 50%);
+}
+body {
+    padding: 0;
+    margin: 0;
+    font-family: Helvetica, sans-serif;
+    background-color: var(--dark-color);
+}
+canvas {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: var(--canvas-size);
+    height: var(--canvas-size);
+    transform: translate(-50%, -50%);
+    background-color: var(--canvas-color);
+    cursor: url('../images/cursors/big-brush.png'), pointer;
+}
+/* 
+    Narzędziowy pojemniczek
+*/
+.color-box {
+    position: absolute;
+    display: none;
+    /* display: inline-block; */
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: var(--color-box-width);
+    min-height: calc(var(--color-box-width) * .75);
+    background-color: var(--color-box-color);
+    border-radius: 5px;
+    overflow-y: hidden;
+}
+.color-header {
+    color: var(--light-color);
+    width: 100%;
+    text-align: center;
+    font-size: var(--color-box-header-size);
+    font-weight: bold;
+    user-select: none;
+    letter-spacing: 1px;
+    padding: var(--color-box-header-offset) 0;
+    background-color: var(--color-box-header-color);
+}
+.color-container {
+    position: relative;
+    padding: 
+        calc(var(--color-box-header-offset) * 1.25)
+        var(--color-box-header-offset)
+        0
+        var(--color-box-header-offset);
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+.color {
+    width: var(--color-size);
+    height: var(--color-size);
+    /* margin-right: var(--color-box-header-offset);
+    margin-top: var(--color-box-header-offset); */
+    border-radius: calc(var(--color-size) * .15);
+    background-color: hsl(0, 95%, 80%);
+    cursor: pointer;
+}
+.color:not(:nth-of-type(4n)) {
+    margin-right: calc(var(--color-box-header-offset) * 1.08);
+}
+.color:nth-of-type(n+5) {
+    margin-top: var(--color-box-header-offset);
+}
+.color.red {
+    background-color: hsl(0, 95%, 70%);
+}
+.color.brown {
+    background-color: hsl(25, 75%, 47%);
+}
+.color.orange {
+    background-color: hsl(30, 95%, 65%);
+}
+.color.yellow {
+    background-color: hsl(60, 100%, 65%);
+}
+.color.grey {
+    background-color: #C0C0C0;	
+}
+.color.green {
+    background-color: hsl(105, 90%, 60%);
+}
+.color.light-blue {
+    background-color: hsl(210, 90%, 70%);
+}
+.color.blue {
+    background-color: hsl(240, 100%, 65%);
+}
+.color.violet {
+    background-color: hsl(270, 100%, 65%);
+}
+.color.pink {
+    background-color: hsl(310, 90%, 72%);
+}
+.color.white {
+    background-color: #FFF;
+}
+.color.dark {
+    background-color: #232323;
+}
+.size-info {
+    position: relative;
+    margin: var(--color-box-header-offset);
+    overflow-x: hidden;
+    /* border-top: 1.5px solid #C9C9C9; */
+}
+.size-info > span {
+    position: relative;
+    display: inline-block;
+    font-size: var(--color-info-size);
+    user-select: none;
+}
+.size-info > input[type='number'] {
+    display: inline-block;
+    background-color: inherit;
+    border: 0 none;
+    border-bottom: 1px solid #D0D0D0;
+    font-size: var(--color-info-size);
+    font-weight: bold;
+    width: calc(var(--color-info-size) * 2.5);
+    height: calc(var(--color-info-size) * 1.45);
+    text-align: center;
+}
+.tool-bar {
+    position: absolute;
+    /* top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); */
+    width: var(--toolbar-size);
+    min-height: calc(var(--toolbar-size) * 2.5);
+    background-color: #545454;
+}
+.tool-bar .tool,
+.tool-bar .option {
+    display: inline-block;
+    width: var(--tool-size);
+    height: var(--tool-size);
+    background-color: transparent;
+    background-size: cover;
+    transition: background-color 500ms ease-out;
+    float: left;
+    cursor: pointer;
+}
+.tool-bar .option {
+    position: absolute;
+    float: none;
+    top: calc((var(--tool-size) + var(--tool-border-size)) * -1);
+    left: 0;
+    background-color: var(--clear-color);
+}
+.tool-bar .option.save {
+    left: calc(var(--tool-size) + calc(var(--tool-border-size) * 2));
+    background-color: var(--save-color);
+}
+.tool-bar .option::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url(../images/cursors/clear.png);
+    background-size: cover;
+}
+.tool-bar .option.save::after {
+    background-image: url(../images/cursors/save.png);
+}
+.tool-bar .option:hover {
+    background-color: var(--clear-hover-color);
+}
+.tool-bar .option.save:hover {
+    background-color: var(--save-hover-color);
+}
+.tool-bar .tool:hover {
+    background-color: #959595;
+    border-color: var(--tool-border-color);
+}
+.tool-bar .tool:nth-of-type(odd) {
+    border-right: var(--tool-border-size) solid var(--tool-border-opaque-color);
+}
+.tool-bar .tool:nth-of-type(even) {
+    border-left: var(--tool-border-size) solid var(--tool-border-opaque-color);
+}
+.tool-bar .tool:nth-of-type(n + 3) {
+    border-top: var(--tool-border-size) solid var(--tool-border-opaque-color);
+}
+.tool-bar .tool:not(:last-of-type):not(:nth-last-of-type(2)) {
+    border-bottom: var(--tool-border-size) solid var(--tool-border-opaque-color);
+}
+.tool-bar .tool.eraser {
+    background-image: url('../images/cursors/eraser.png');
+    background-size: 75%;
+    background-repeat: no-repeat;
+    background-position: 7px 10px;
+}
+.tool-bar .tool.small-brush {
+    background-image: url('../images/cursors/small-brush.png');
+}
+.tool-bar .tool.normal-brush {
+    background-image: url('../images/cursors/normal-brush.png');
+}
+.tool-bar .tool.big-brush {
+    background-image: url('../images/cursors/big-brush.png');
+}
+.tool-bar .tool.spray {
+    background-image: url('../images/cursors/spray.png');
+}
+.tool-bar .tool.star {
+    background-image: url('../images/cursors/star.png');
+}
+.tool-bar .tool.filled-star {
+    background-image: url('../images/cursors/filled-star.png');
+}
+.tool-bar .tool.circle {
+    background-image: url('../images/cursors/circle.png');
+}
+.tool-bar .tool.filled-circle {
+    background-image: url('../images/cursors/filled-circle.png');
+}
+.tool-bar .tool.line {
+    background-image: url('../images/cursors/line.png');
+}
+.tool-bar .tool.paint-bucket {
+    background-image: url('../images/cursors/paint-bucket.png');
+}
+.tool-bar .tool.dropper {
+    background-image: url('../images/cursors/dropper.png');
+}
+.tool-bar .tool.cross {
+    background-image: url('../images/cursors/cross.png');
+}
+.tool-bar .tool.triangle {
+    background-image: url('../images/cursors/triangle.png');
+}
+.tool-bar .tool.square {
+    background-image: url('../images/cursors/square.png');
+}
+/* .tool-bar .tool.clear {
+    background-image: url('../images/cursors/clear.png');
+} */
+
+/* 
+    Icons sites:
+    - https://www.flaticon.com/search?word=eraser
+    - https://www.iconfinder.com/search/?q=eraser
+    - https://icons8.com/icon/set/eraser/cotton <- super stronka xDD
+*/
